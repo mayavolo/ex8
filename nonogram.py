@@ -114,6 +114,25 @@ def make_columns_into_rows(columns):
     return board
 
 
+def conclude_constrains_from_rows_and_columns(sorted_columns_board, sorted_rows_board, board):
+    for row in range(len(sorted_rows_board)):
+        for col in range(len(sorted_rows_board[0])):
+            if sorted_rows_board[row][col] == -1:
+                board[row][col] = sorted_columns_board[row][col]
+            else:
+                board[row][col] = sorted_rows_board[row][col]
+    return board
+
+
+# def conclude_constrains_from_rows_and_columns(sorted_columns_board, sorted_rows_board):
+#     final_board = sorted_rows_board.copy()
+#     for row in range(len(sorted_rows_board)):
+#         for col in range(len(sorted_rows_board[0])):
+#             if sorted_rows_board[row][col] == -1:
+#                 final_board[row][col] = sorted_columns_board[row][col]
+#     return final_board
+
+
 def conclude_from_constraints(board, constraints):
     if len(board) == 0:
         return None
@@ -133,23 +152,16 @@ def conclude_from_constraints(board, constraints):
         all_columns.append(semi_final_col)
     sorted_col_board = make_columns_into_rows(all_columns)
 
-    for j in range(len(board)):
-        comparison_rows = [sorted_rows_board[j], sorted_col_board[j]]
-        final_row = get_intersection_row(comparison_rows)
-        board[j] = final_row
-
+    conclude_constrains_from_rows_and_columns(sorted_col_board, sorted_rows_board, board)
+    print(f'the board is: {board}')
     return None
 
 
-# conclude_from_constraints([[-1, -1, -1, -1, -1, -1]],[[[2, 1]], [[], [1], [1], [], [1], []]])
-
-
-# res = get_row_variations([-1, -1, -1, -1, -1, -1, -1, -1], [2, 3, 1])
+# conclude_from_constraints([[-1, -1, -1, -1, -1, -1]], [[[2, 1]], [[], [1], [1], [], [1], []]])
+# conclude_constrains_from_rows_and_columns(
+#     [[-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1]],
+#     [[-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, -1]])
+res = get_row_variations([-1, -1, -1, -1, -1], [1,3])
+print(res)
 # for i in range(len(res)):
 #    print(res[i])
-
-
-
-
-
-
