@@ -128,21 +128,18 @@ def make_columns_into_rows(columns):
 
 def conclude_constrains_from_rows_and_columns(sorted_columns_board, sorted_rows_board, board):
     conclusive = True
-    something_changed = False
     for row in range(len(sorted_rows_board)):
         for col in range(len(sorted_rows_board[0])):
+            if board[row][col] != -1:
+                continue
             prev = board[row][col]
             if sorted_rows_board[row][col] == -1:
                 board[row][col] = sorted_columns_board[row][col]
             else:
                 board[row][col] = sorted_rows_board[row][col]
-            if board[row][col] == -1:
-                conclusive = False
             if prev != board[row][col]:
-                something_changed = True
+                conclusive = False
 
-    if not something_changed:
-        conclusive = True
     return conclusive
 
 
@@ -155,7 +152,7 @@ def conclude_constrains_from_rows_and_columns(sorted_columns_board, sorted_rows_
 #     return final_board
 
 def sum_black(blocks):
-    sum = 0;
+    sum = 0
     for i in range(len(blocks)):
         sum += blocks[i]
     return sum
@@ -172,7 +169,8 @@ def conclude_from_constraints(board, constraints):
         sorted_rows_board = board.copy()
         all_columns = []
         for row_index in range(len(board)):
-            starting_rows = get_row_variations(board[row_index], constraints[0][row_index])
+            row_copy = board[row_index].copy()
+            starting_rows = get_row_variations(row_copy, constraints[0][row_index])
             semi_final_row = get_intersection_row(starting_rows)
             sorted_rows_board[row_index] = semi_final_row
 
@@ -184,9 +182,23 @@ def conclude_from_constraints(board, constraints):
         sorted_col_board = make_columns_into_rows(all_columns)
 
         conclusive = conclude_constrains_from_rows_and_columns(sorted_col_board, sorted_rows_board, board)
-        print(f'the board is: {board}')
 
     return None
+
+
+def solve_easy_nonogram(constraints):
+    num_of_rows = len(constraints[0])
+    num_of_columns = len(constraints[1])
+    board = []
+    one_row = []
+    for col in range(num_of_columns):
+        one_row.append(-1)
+    for row in range(num_of_rows):
+        board.append(one_row.copy())
+    conclude_from_constraints(board, constraints)
+    return board
+
+
 
 # conclude_from_constraints([[-1, -1, -1, -1, -1, -1]], [[[2, 1]], [[], [1], [1], [], [1], []]])
 # conclude_constrains_from_rows_and_columns(
@@ -197,3 +209,4 @@ def conclude_from_constraints(board, constraints):
 # print(get_intersection_row(res))
 # for i in range(len(res)):
 #    print(res[i])
+solve_easy_nonogram([[[2], []], [[1], [1]]])
